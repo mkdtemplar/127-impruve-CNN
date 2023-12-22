@@ -4,6 +4,37 @@ from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.layers import Dense, Flatten, Conv2D, MaxPool2D, Activation
 from tensorflow.keras import Sequential
 import tensorflow as tf
+import matplotlib.pyplot as plt
+
+
+# Plot the validation and training data separately
+def plot_loss_curves(history):
+    """
+  Returns separate loss curves for training and validation metrics.
+  """
+    loss = history.history['loss']
+    val_loss = history.history['val_loss']
+
+    accuracy = history.history['accuracy']
+    val_accuracy = history.history['val_accuracy']
+
+    epochs = range(len(history.history['loss']))
+
+    # Plot loss
+    plt.plot(epochs, loss, label='training_loss')
+    plt.plot(epochs, val_loss, label='val_loss')
+    plt.title('Loss')
+    plt.xlabel('Epochs')
+    plt.legend()
+
+    # Plot accuracy
+    plt.figure()
+    plt.plot(epochs, accuracy, label='training_accuracy')
+    plt.plot(epochs, val_accuracy, label='val_accuracy')
+    plt.title('Accuracy')
+    plt.xlabel('Epochs')
+    plt.legend()
+
 
 train_dir = "pizza_steak/train/"
 test_dir = "pizza_steak/test/"
@@ -48,14 +79,14 @@ test_data = test_datagen.flow_from_directory(test_dir,
 
 # Create the model (same as model_5 and model_6)
 model_7 = Sequential([
-  Conv2D(10, 3, activation='relu', input_shape=(224, 224, 3)),
-  MaxPool2D(),
-  Conv2D(10, 3, activation='relu'),
-  MaxPool2D(),
-  Conv2D(10, 3, activation='relu'),
-  MaxPool2D(),
-  Flatten(),
-  Dense(1, activation='sigmoid')
+    Conv2D(10, 3, activation='relu', input_shape=(224, 224, 3)),
+    MaxPool2D(),
+    Conv2D(10, 3, activation='relu'),
+    MaxPool2D(),
+    Conv2D(10, 3, activation='relu'),
+    MaxPool2D(),
+    Flatten(),
+    Dense(1, activation='sigmoid')
 ])
 
 # Compile the model
@@ -64,7 +95,7 @@ model_7.compile(loss='binary_crossentropy',
                 metrics=['accuracy'])
 
 # Fit the model
-history_7 = model_7.fit(train_data_augmented, # now the augmented data is shuffled
+history_7 = model_7.fit(train_data_augmented,  # now the augmented data is shuffled
                         epochs=5,
                         steps_per_epoch=len(train_data_augmented),
                         validation_data=test_data,
