@@ -105,7 +105,7 @@ test_data = test_datagen.flow_from_directory(test_dir,
                                              class_mode='binary')
 
 # Create the model (same as model_5 and model_6)
-model_7 = Sequential([
+model = Sequential([
     Conv2D(10, 3, activation='relu', input_shape=(224, 224, 3)),
     MaxPool2D(),
     Conv2D(10, 3, activation='relu'),
@@ -117,18 +117,21 @@ model_7 = Sequential([
 ])
 
 # Compile the model
-model_7.compile(loss='binary_crossentropy',
-                optimizer=Adam(),
-                metrics=['accuracy'])
+model.compile(loss='binary_crossentropy',
+              optimizer=Adam(),
+              metrics=['accuracy'])
+
+# Model summary
+model.summary()
 
 # Fit the model
-history_7 = model_7.fit(train_data_augmented,  # now the augmented data is shuffled
-                        epochs=5,
-                        steps_per_epoch=len(train_data_augmented),
-                        validation_data=test_data,
-                        validation_steps=len(test_data))
+history_7 = model.fit(train_data_augmented,  # now the augmented data is shuffled
+                      epochs=5,
+                      steps_per_epoch=len(train_data_augmented),
+                      validation_data=test_data,
+                      validation_steps=len(test_data))
 
 steak = load_and_prep_image("03-steak.jpeg")
-pred = model_7.predict(tf.expand_dims(steak, axis=0))
-pred_and_plot(model_7, "03-steak.jpeg", class_names)
-# plot_loss_curves(history_7)
+pred = model.predict(tf.expand_dims(steak, axis=0))
+pred_and_plot(model, "03-steak.jpeg", class_names)
+plot_loss_curves(history_7)
