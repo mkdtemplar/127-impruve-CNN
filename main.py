@@ -84,27 +84,18 @@ test_datagen = ImageDataGenerator(rescale=1 / 255.)
 
 # Import data and augment it from training directory
 print("Augmented training images:")
-train_data_augmented = train_datagen_augmented.flow_from_directory(train_dir,
-                                                                   target_size=(224, 224),
-                                                                   batch_size=32,
-                                                                   class_mode='binary',
-                                                                   shuffle=True)
+train_data_augmented = train_datagen_augmented.flow_from_directory(train_dir,target_size=(224, 224),  batch_size=32,
+                                                                   class_mode='binary', shuffle=True)
 
 # Create non-augmented data batches
 print("Non-augmented training images:")
-train_data = train_datagen.flow_from_directory(train_dir,
-                                               target_size=(224, 224),
-                                               batch_size=32,
-                                               class_mode='binary',
+train_data = train_datagen.flow_from_directory(train_dir, target_size=(224, 224), batch_size=32, class_mode='binary',
                                                shuffle=True)  # Don't shuffle for demonstration purposes
 
 print("Unchanged test images:")
-test_data = test_datagen.flow_from_directory(test_dir,
-                                             target_size=(224, 224),
-                                             batch_size=32,
-                                             class_mode='binary')
+test_data = test_datagen.flow_from_directory(test_dir, target_size=(224, 224), batch_size=32, class_mode='binary')
 
-# Create the model (same as model_5 and model_6)
+# Create the model
 model = Sequential([
     Conv2D(10, 3, activation='relu', input_shape=(224, 224, 3)),
     MaxPool2D(),
@@ -117,21 +108,17 @@ model = Sequential([
 ])
 
 # Compile the model
-model.compile(loss='binary_crossentropy',
-              optimizer=Adam(),
-              metrics=['accuracy'])
+model.compile(loss='binary_crossentropy', optimizer=Adam(), metrics=['accuracy'])
 
 # Model summary
 model.summary()
 
 # Fit the model
-history_7 = model.fit(train_data_augmented,  # now the augmented data is shuffled
-                      epochs=5,
-                      steps_per_epoch=len(train_data_augmented),
-                      validation_data=test_data,
-                      validation_steps=len(test_data))
+history = model.fit(train_data_augmented,  # now the augmented data is shuffled
+                    epochs=5, steps_per_epoch=len(train_data_augmented), validation_data=test_data,
+                    validation_steps=len(test_data))
 
 steak = load_and_prep_image("03-steak.jpeg")
 pred = model.predict(tf.expand_dims(steak, axis=0))
 pred_and_plot(model, "03-steak.jpeg", class_names)
-plot_loss_curves(history_7)
+plot_loss_curves(history)
